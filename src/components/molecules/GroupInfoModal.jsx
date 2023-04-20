@@ -4,20 +4,27 @@ import Wrapper from "../atoms/Wrapper";
 import Text from "../atoms/Text";
 import Button from "../atoms/Button";
 import Avatar from "../atoms/Avatar";
+import useUsers from "../data/useUsers"; // Importa el hook useUsersData
 
-const GroupInfoModal = ({ group, onCloseModal, onSendProposal }) => {
-  const { image, name, description } = group;
+const GroupInfoModal = ({ onCloseModal, onSendProposal }) => {
+  const users = useUsersData(); // Utiliza el hook para obtener los datos de los usuarios
 
   return (
     <Wrapper backgroundColor="#fff" borderRadius="8px" padding="32px">
-      <Avatar src={image} size={120} />
-      <Text text={name} size={24} weight={600} margin="16px 0 0 0" />
-      <Text text={description} size={16} margin="8px 0 0 0" />
-      <Button
-        text="Send proposal"
-        onClick={onSendProposal}
-        margin="24px 0 0 0"
-      />
+      {users.map((user, index) => (
+        <React.Fragment key={index}>
+          <Avatar src={user.image} size={120} />
+          <Text text={user.name} size={24} weight={600} margin="16px 0 0 0" />
+          <Text text={user.description} size={16} margin="8px 0 0 0" />
+          <Text text={user.location} size={14} margin="8px 0 0 0" />
+          <Text text={user.phone} size={14} margin="8px 0 0 0" />
+          <Button
+            text="Send proposal"
+            onClick={() => onSendProposal(user)}
+            margin="24px 0 0 0"
+          />
+        </React.Fragment>
+      ))}
       <Button
         text="Close"
         onClick={onCloseModal}
@@ -29,13 +36,8 @@ const GroupInfoModal = ({ group, onCloseModal, onSendProposal }) => {
 };
 
 GroupInfoModal.propTypes = {
-  group: PropTypes.shape({
-    image: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired
-  }).isRequired,
   onCloseModal: PropTypes.func.isRequired,
-  onSendProposal: PropTypes.func.isRequired
+  onSendProposal: PropTypes.func.isRequired,
 };
 
 export default GroupInfoModal;
